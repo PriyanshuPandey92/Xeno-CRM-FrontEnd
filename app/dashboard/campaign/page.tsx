@@ -111,6 +111,7 @@ const Page = () => {
       });
 
       const data = await response.json();
+      console.log("Submitting form result:", data);
       if (data.success) {
         message.success("Campaign created successfully!");
       } else {
