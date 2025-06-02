@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@ant-design/v5-patch-for-react-18": "^1.0.3",
     "@react-oauth/google": "^0.12.1",
     "antd": "^5.24.9",
     "class-variance-authority": "^0.7.1",
