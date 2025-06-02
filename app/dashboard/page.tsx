@@ -5,9 +5,8 @@ import useAuthStore from '../store/useAuthStore';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { TextShimmer } from '@/components/ui/text-shimmer';
-import '@ant-design/v5-patch-for-react-19';
 import { Spin } from 'antd';
-import { color } from 'framer-motion';
+
 const Page = () => {
     const isMobile = useIsMobile();
     const [currUser, setCurrUser] = useState<any>(null);
