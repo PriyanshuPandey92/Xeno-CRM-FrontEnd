@@ -26,7 +26,7 @@ This project is a Mini CRM Platform built as part of the Xeno SDE Internship Ass
 
 ## Live Demo
 
-[Frontend Link](xeno-crm-ivory-ten.vercel.app)
+[Frontend Link](https://xeno-crm-ivory-ten.vercel.app)
 [Backend Link](https://xeno-crm-render.onrender.com)
 
 ---
