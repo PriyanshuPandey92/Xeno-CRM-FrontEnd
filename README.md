@@ -82,8 +82,6 @@ This project is a Mini CRM Platform built as part of the Xeno SDE Internship Ass
 *   **Authentication:**
     *   Google OAuth 2.0
     *   JSON Web Tokens (JWTs) for session management (implicitly via Google ID token verification).
-*   **API Documentation:**
-    *   Swagger (OpenAPI)
 *   **AI:**
     *   Google Gemini API (for message generation)
 *   **Development Tools:**
