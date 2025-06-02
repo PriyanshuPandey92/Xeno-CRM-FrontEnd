@@ -183,15 +183,6 @@ Follow these instructions to set up and run the project locally.
 
 ---
 
-## API Documentation
-
-The backend API is documented using Swagger (OpenAPI). Once the backend server is running, you can access the Swagger UI at:
-`http://localhost:5001/api-docs` (or your backend URL + `/api-docs`)
-
-This interface allows you to view all available API endpoints, their request/response schemas, and test them directly.
-
----
-
 ## AI Integration
 
 *   **AI-Driven Message Suggestions:**
