@@ -98,6 +98,7 @@ const Page = () => {
 
   // Handle form submission
   const handleSubmit = async (values: any) => {
+    console.log("Submitting form with values:", values);
     setLoading(true);
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/campaigns/create`, {
