@@ -23,72 +23,103 @@ interface Campaign {
  
 }
 
-const generateMockCampaigns = (count: number): Campaign[] => {
-  const statuses: Campaign['status'][] = ['draft', 'queued', 'sending', 'sent', 'error', 'completed_with_errors'];
-  const mockCampaigns: Campaign[] = [];
+// const generateMockCampaigns = (count: number): Campaign[] => {
+//   const statuses: Campaign['status'][] = ['draft', 'queued', 'sending', 'sent', 'error', 'completed_with_errors'];
+//   const mockCampaigns: Campaign[] = [];
 
-  for (let i = 1; i <= count; i++) {
-    const status = statuses[Math.floor(Math.random() * statuses.length)];
-    const audienceSize = Math.floor(Math.random() * 200) + 10;
-    let sentCount = 0;
-    let failedCount = 0;
+//   for (let i = 1; i <= count; i++) {
+//     const status = statuses[Math.floor(Math.random() * statuses.length)];
+//     const audienceSize = Math.floor(Math.random() * 200) + 10;
+//     let sentCount = 0;
+//     let failedCount = 0;
 
-    if (status === 'sent' || status === 'completed_with_errors' || status === 'sending') {
-      sentCount = Math.floor(Math.random() * audienceSize * 0.95); 
-      if (status === 'completed_with_errors' || (status === 'sending' && Math.random() > 0.5) ) {
-        failedCount = Math.floor(Math.random() * (audienceSize - sentCount));
-      }
-      if (status === 'sent') { 
-        failedCount = audienceSize - sentCount;
-        if (failedCount < 0) failedCount = 0;
-         if (failedCount > 0) sentCount = audienceSize - failedCount; 
-      }
-    }
-     if (status === 'error') {
-      failedCount = audienceSize;
-    }
+//     if (status === 'sent' || status === 'completed_with_errors' || status === 'sending') {
+//       sentCount = Math.floor(Math.random() * audienceSize * 0.95); 
+//       if (status === 'completed_with_errors' || (status === 'sending' && Math.random() > 0.5) ) {
+//         failedCount = Math.floor(Math.random() * (audienceSize - sentCount));
+//       }
+//       if (status === 'sent') { 
+//         failedCount = audienceSize - sentCount;
+//         if (failedCount < 0) failedCount = 0;
+//          if (failedCount > 0) sentCount = audienceSize - failedCount; 
+//       }
+//     }
+//      if (status === 'error') {
+//       failedCount = audienceSize;
+//     }
 
 
-    mockCampaigns.push({
-      _id: `campaign_${i}_${Date.now()}`,
-      name: `Campaign Alpha ${i}`,
-      message: `This is a special offer for customer [Name] regarding our new product line for campaign ${i}. Enjoy a discount!`,
-      intent: i % 2 === 0 ? 'Promotion' : 'Win-back',
-      status,
-      audienceSize,
-      sentCount,
-      failedCount,
-      createdAt: dayjs().subtract(Math.floor(Math.random() * 30), 'day').toISOString(),
-    });
-  }
-  return mockCampaigns.sort((a, b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf());
-};
+//     mockCampaigns.push({
+//       _id: `campaign_${i}_${Date.now()}`,
+//       name: `Campaign Alpha ${i}`,
+//       message: `This is a special offer for customer [Name] regarding our new product line for campaign ${i}. Enjoy a discount!`,
+//       intent: i % 2 === 0 ? 'Promotion' : 'Win-back',
+//       status,
+//       audienceSize,
+//       sentCount,
+//       failedCount,
+//       createdAt: dayjs().subtract(Math.floor(Math.random() * 30), 'day').toISOString(),
+//     });
+//   }
+//   return mockCampaigns.sort((a, b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf());
+// };
 
 
 const CampaignsPage = () => {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [loading, setLoading] = useState(false);
+  const [authToken, setAuthToken] = useState<string | null>(null);
   const [sendingCampaignId, setSendingCampaignId] = useState<string | null>(null);
 
-  const initialMockData = useCallback(() => {
-    setLoading(true);
-  
-    setTimeout(() => {
-      setCampaigns(generateMockCampaigns(15));
+  useEffect(()=>{
+    const token = sessionStorage.getItem('googleIdToken');
+    if(token){
+      setAuthToken(token);
+    }
+    else{
+      console.error('No auth token found');
+    }
+  },[])
+  useEffect(()=>{
+    if(authToken){
+      getAllCampaigns();
+    }
+  },[authToken])
+
+  const getAllCampaigns = async ()=>{
+    try{
+      setLoading(true);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/campaigns/getAllCampaigns`,{
+        method:'GET',
+        headers:{
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`
+        }
+      });
+      const data = await response.json();
+      if(data.success){
+        setCampaigns(data.response.campaigns);
+      }
+      else{
+        console.error('Error fetching campaigns', data.response,campaigns);
+      }
+      console.log(data);
+      
+    }
+    catch(e){
+      console.log(e);
+    }
+    finally{
       setLoading(false);
-    }, 500);
-  }, []);
-
-
-  useEffect(() => {
-    initialMockData();
-  }, [initialMockData]);
-
-
+    }
+  }
+  
   const fetchCampaigns = useCallback(() => {
-    initialMockData();
-    message.info('Mock data reloaded.');
-  }, [initialMockData]);
+    if(authToken){
+      getAllCampaigns();
+      message.info('Campaign data reloaded successfully');
+    }
+  }, [authToken]);
 
 
   const handleSendCampaign = async (campaignId: string) => {
@@ -98,21 +129,13 @@ const CampaignsPage = () => {
 
     await new Promise(resolve => setTimeout(resolve, 1500));
 
-    setCampaigns(prevCampaigns =>
-      prevCampaigns.map(campaign =>
-        campaign._id === campaignId ? { ...campaign, status: 'queued' } : campaign
-      )
-    );
+    setCampaigns(prevCampaigns => prevCampaigns.map(campaign => campaign._id === campaignId ? { ...campaign, status: 'queued' } : campaign));
     message.success({ content: 'Campaign dispatch initiated successfully!', key: 'dispatching', duration: 2 });
     setSendingCampaignId(null);
 
  
     setTimeout(() => {
-      setCampaigns(prevCampaigns =>
-        prevCampaigns.map(campaign =>
-          campaign._id === campaignId ? { ...campaign, status: 'sending' } : campaign
-        )
-      );
+      setCampaigns(prevCampaigns => prevCampaigns.map(campaign => campaign._id === campaignId ? { ...campaign, status: 'sending' } : campaign));
     }, 2000);
 
     setTimeout(() => {
@@ -241,7 +264,7 @@ const CampaignsPage = () => {
       <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Title level={2}>Campaigns</Title>
         <Button icon={<ReloadOutlined />} onClick={fetchCampaigns} loading={loading}>
-          Refresh Mock Data
+          Refresh 
         </Button>
       </div>
       <Table

@@ -49,6 +49,7 @@ const OAuthLogin = () => {
 
   return (
     <>
+      {/* conditional rendering */}
       {!isLoggedIn ? (
         <GoogleLogin onSuccess={handleSuccess} onError={handleFailure} />
       ) : (

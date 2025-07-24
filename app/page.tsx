@@ -3,6 +3,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import OAuthLogin from "../components/OAuthLogin";
 import { HeroSection } from "@/components/blocks/hero-section-dark";
 export default function Home() {
+  console.log("Google Client ID:", process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID);
   return (
     <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ""}>
       <HeroSection
