@@ -1,17 +1,13 @@
-"use client"
+"use client";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { IconType } from "react-icons";
 
 import {
-
   FiBox,
   FiChevronsRight,
   FiHome,
-
   FiLogOut,
-
   FiUser,
-
 } from "react-icons/fi";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -22,31 +18,24 @@ import { log } from "console";
 import { FaLessThan } from "react-icons/fa";
 import { HiSpeakerphone } from "react-icons/hi";
 
-export default function Example({children } : {children: React.ReactNode}) {
+export default function Example({ children }: { children: React.ReactNode }) {
   const isMobile = useIsMobile();
 
   if (isMobile) {
-    return(<>
-    {children}
-    </>)
+    return <>{children}</>;
   }
   return (
-
     <div className="flex">
-              <Sidebar />
-              <div className="flex-1">{
-                children
-              }</div>
+      <Sidebar />
+      <div className="flex-1">{children}</div>
     </div>
-
- 
   );
-};
+}
 
 const Sidebar = () => {
   const [open, setOpen] = useState(true);
   const [selected, setSelected] = useState("Dashboard");
-  const {logout} = useAuthStore();
+  const { logout } = useAuthStore();
   const router = useRouter();
   return (
     <motion.nav
@@ -74,53 +63,50 @@ const Sidebar = () => {
           setSelected={setSelected}
           open={open}
           href="/dashboard/customers"
-   
         />
         <Option
-        Icon = {FiBox}
-        title="Orders"
-        selected={selected}
-        setSelected={setSelected}
-        open={open}
-        href="/dashboard/orders"
+          Icon={FiBox}
+          title="Orders"
+          selected={selected}
+          setSelected={setSelected}
+          open={open}
+          href="/dashboard/orders"
         />
         <Option
-        Icon = {FaLessThan}
-        title="Segment Rules"
-        selected={selected}
-        setSelected={setSelected}
-        open={open}
-        href="/dashboard/segment-rules"
+          Icon={FaLessThan}
+          title="Segment Rules"
+          selected={selected}
+          setSelected={setSelected}
+          open={open}
+          href="/dashboard/segment-rules"
         />
         <Option
-        Icon = {HiSpeakerphone}
-        title="Campaign"
-        selected={selected}
-        setSelected={setSelected}
-        open={open}
-        href="/dashboard/campaign"
+          Icon={HiSpeakerphone}
+          title="Campaign"
+          selected={selected}
+          setSelected={setSelected}
+          open={open}
+          href="/dashboard/campaign"
         />
         <Option
-        Icon = {HiSpeakerphone}
-        title="Campaign History"
-        selected={selected}
-        setSelected={setSelected}
-        open={open}
-        href="/dashboard/campaigns"
+          Icon={HiSpeakerphone}
+          title="Campaign History"
+          selected={selected}
+          setSelected={setSelected}
+          open={open}
+          href="/dashboard/campaigns"
         />
 
-       
-                <Option
+        <Option
           Icon={FiLogOut}
           title="Logout"
           selected={selected}
           setSelected={setSelected}
           open={open}
-          onClick = {()=>{
+          onClick={() => {
             logout();
             router.push("/");
           }}
-      
         />
       </div>
 
@@ -135,10 +121,8 @@ const Option = ({
   selected,
   setSelected,
   open,
-  href, 
-  onClick
-
- 
+  href,
+  onClick,
 }: {
   Icon: IconType;
   title: string;
@@ -147,71 +131,78 @@ const Option = ({
   open: boolean;
   href?: string;
   onClick?: () => void;
-
 }) => {
-
-
   return (
-    
     <>
-    {
-        title === "Logout" ?
-
+      {title === "Logout" ? (
         <motion.button
-      layout
-      onClick = {()=>{}}
-      className={`relative flex h-10 w-full items-center rounded-md transition-colors ${selected === title ? "bg-indigo-100 text-indigo-800" : "text-slate-500 hover:bg-slate-100"}`}
-    >
-      <motion.div
-        layout
-        className={`grid  h-full w-10 place-content-center text-lg ${title==="Logout" ? "text-red-500" : ""}`}
-      >
-        <Icon />
-      </motion.div>
-      {open && (
-        <motion.span
           layout
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.125 }}
-          className={`text-xs font-medium ${title==="Logout" ? "text-red-500" : ""}`}
-          onClick={onClick}
+          onClick={() => {}}
+          className={`relative flex h-10 w-full items-center rounded-md transition-colors ${
+            selected === title
+              ? "bg-indigo-100 text-indigo-800"
+              : "text-slate-500 hover:bg-slate-100"
+          }`}
         >
-          {title}
-        </motion.span>
+          <motion.div
+            layout
+            className={`grid  h-full w-10 place-content-center text-lg ${
+              title === "Logout" ? "text-red-500" : ""
+            }`}
+          >
+            <Icon />
+          </motion.div>
+          {open && (
+            <motion.span
+              layout
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.125 }}
+              className={`text-xs font-medium ${
+                title === "Logout" ? "text-red-500" : ""
+              }`}
+              onClick={onClick}
+            >
+              {title}
+            </motion.span>
+          )}
+        </motion.button>
+      ) : (
+        <Link href={href as string}>
+          <motion.button
+            layout
+            onClick={() => setSelected(title)}
+            className={`relative flex h-10 w-full items-center rounded-md cursor-pointer transition-colors ${
+              selected === title
+                ? "bg-indigo-100 text-indigo-800"
+                : "text-slate-500 hover:bg-slate-100"
+            }`}
+          >
+            <motion.div
+              layout
+              className={`grid h-full w-10 place-content-center text-lg ${
+                title === "Logout" ? "text-red-500 " : ""
+              }`}
+            >
+              <Icon />
+            </motion.div>
+            {open && (
+              <motion.span
+                layout
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.125 }}
+                className={`text-xs font-medium ${
+                  title === "Logout" ? "text-red-500" : ""
+                }`}
+                onClick={onClick}
+              >
+                {title}
+              </motion.span>
+            )}
+          </motion.button>
+        </Link>
       )}
-
-      
-    </motion.button> : 
-    <Link href={href as string} >
-        <motion.button
-      layout
-      onClick={() => setSelected(title)}
-      className={`relative flex h-10 w-full items-center rounded-md cursor-pointer transition-colors ${selected === title ? "bg-indigo-100 text-indigo-800" : "text-slate-500 hover:bg-slate-100"}`}
-    >
-      <motion.div
-        layout
-        className={`grid h-full w-10 place-content-center text-lg ${title==="Logout" ? "text-red-500 " : ""}`}
-      >
-        <Icon />
-      </motion.div>
-      {open && (
-        <motion.span
-          layout
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.125 }}
-          className={`text-xs font-medium ${title==="Logout" ? "text-red-500" : ""}`}
-          onClick={onClick}
-        >
-          {title}
-        </motion.span>
-      )}
-
-      
-    </motion.button>
-    </Link>
-    }
     </>
   );
 };
@@ -220,16 +211,13 @@ const TitleSection = ({ open }: { open: boolean }) => {
   return (
     <div className="mb-3 border-b border-slate-300 pb-3">
       <div className="flex cursor-pointer items-center justify-center rounded-md transition-colors hover:bg-slate-100">
-        <div className="flex items-center justify-center gap-2">
-            <p>CRM</p>
+        <div className="flex items-center justify-center gap-2 text-2xl mt-5">
+          <p>CRM</p>
         </div>
-   
       </div>
     </div>
   );
 };
-
-
 
 const ToggleClose = ({
   open,
@@ -268,4 +256,3 @@ const ToggleClose = ({
     </motion.button>
   );
 };
-

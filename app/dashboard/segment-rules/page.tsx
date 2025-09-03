@@ -6,22 +6,23 @@ const { Option } = Select;
 
 const Page = () => {
   const [loading, setLoading] = useState(false);
-  const [form] = Form.useForm();  
+  const [form] = Form.useForm();
   const handleSubmit = async (values: any) => {
     console.log("Form Values:", values);
     setLoading(true);
 
-
-    
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/segmentRules/create`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${sessionStorage.getItem("googleIdToken")}`,
-        },
-        body: JSON.stringify(values),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/segmentRules/create`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("googleIdToken")}`,
+          },
+          body: JSON.stringify(values),
+        }
+      );
 
       const data = await response.json();
       if (data.success) {
@@ -34,17 +35,16 @@ const Page = () => {
       console.error("Error creating segment rule:", error);
       message.error("An error occurred while creating the segment rule.");
     }
-
+    alert("Segment Rule Created Successfully!")
     setLoading(false);
+
   };
 
   return (
     <div className="h-screen flex flex-col px-10 mt-10 text-xl">
       <h1 className="text-5xl font-bold">Create Segment Rule</h1>
       <div className="mt-5">
-        <Form
-        form={form}
-         layout="vertical" onFinish={handleSubmit}>
+        <Form form={form} layout="vertical" onFinish={handleSubmit}>
           <Form.Item
             label="Logic Type"
             name="logicType"
@@ -64,28 +64,31 @@ const Page = () => {
                     <Form.Item
                       {...restField}
                       name={[name, "field"]}
-            
-                      rules={[{ required: true, message: "Please enter a field" }]}
+                      rules={[
+                        { required: true, message: "Please enter a field" },
+                      ]}
                     >
                       <Input placeholder="Field (e.g., spend, visits)" />
                     </Form.Item>
                     <Form.Item
                       {...restField}
                       name={[name, "op"]}
-            
-                      rules={[{ required: true, message: "Please enter an operator" }]}
+                      rules={[
+                        { required: true, message: "Please enter an operator" },
+                      ]}
                     >
                       <Input placeholder="Operator (e.g., >, <, =)" />
                     </Form.Item>
                     <Form.Item
                       {...restField}
                       name={[name, "value"]}
-           
-                      rules={[{ required: true, message: "Please enter a value" }]}
+                      rules={[
+                        { required: true, message: "Please enter a value" },
+                      ]}
                     >
                       <Input placeholder="Value (e.g., 10000, 3)" />
                     </Form.Item>
-                    <Button  type="primary" onClick={() => remove(name)}>
+                    <Button type="primary" onClick={() => remove(name)}>
                       Remove
                     </Button>
                   </div>

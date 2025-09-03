@@ -23,48 +23,6 @@ interface Campaign {
  
 }
 
-// const generateMockCampaigns = (count: number): Campaign[] => {
-//   const statuses: Campaign['status'][] = ['draft', 'queued', 'sending', 'sent', 'error', 'completed_with_errors'];
-//   const mockCampaigns: Campaign[] = [];
-
-//   for (let i = 1; i <= count; i++) {
-//     const status = statuses[Math.floor(Math.random() * statuses.length)];
-//     const audienceSize = Math.floor(Math.random() * 200) + 10;
-//     let sentCount = 0;
-//     let failedCount = 0;
-
-//     if (status === 'sent' || status === 'completed_with_errors' || status === 'sending') {
-//       sentCount = Math.floor(Math.random() * audienceSize * 0.95); 
-//       if (status === 'completed_with_errors' || (status === 'sending' && Math.random() > 0.5) ) {
-//         failedCount = Math.floor(Math.random() * (audienceSize - sentCount));
-//       }
-//       if (status === 'sent') { 
-//         failedCount = audienceSize - sentCount;
-//         if (failedCount < 0) failedCount = 0;
-//          if (failedCount > 0) sentCount = audienceSize - failedCount; 
-//       }
-//     }
-//      if (status === 'error') {
-//       failedCount = audienceSize;
-//     }
-
-
-//     mockCampaigns.push({
-//       _id: `campaign_${i}_${Date.now()}`,
-//       name: `Campaign Alpha ${i}`,
-//       message: `This is a special offer for customer [Name] regarding our new product line for campaign ${i}. Enjoy a discount!`,
-//       intent: i % 2 === 0 ? 'Promotion' : 'Win-back',
-//       status,
-//       audienceSize,
-//       sentCount,
-//       failedCount,
-//       createdAt: dayjs().subtract(Math.floor(Math.random() * 30), 'day').toISOString(),
-//     });
-//   }
-//   return mockCampaigns.sort((a, b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf());
-// };
-
-
 const CampaignsPage = () => {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [loading, setLoading] = useState(false);
@@ -187,7 +145,7 @@ const CampaignsPage = () => {
     },
     {
       title: 'Intent',
-      dataIndex: 'intent',
+      dataIndex: 'intent', 
       key: 'intent',
       render: (intent?: string) => intent || '-',
     },
