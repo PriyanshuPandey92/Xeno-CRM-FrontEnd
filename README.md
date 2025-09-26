@@ -1,7 +1,7 @@
 Backend for this project - https://github.com/PriyanshuPandey92/Xeno-CRM-Render
-# 🚀 CRM Platform – Xeno SDE Internship Assignment 2025
+# 🚀 CRM Platform
 
-An intelligent CRM system developed as part of the Xeno SDE Internship challenge. The platform empowers dynamic customer segmentation, campaign management, and AI-driven personalization.
+An intelligent CRM system. The platform empowers dynamic customer segmentation, campaign management, and AI-driven personalization.
 
 ---
 
