@@ -23,9 +23,7 @@ const Page = () => {
           user: JSON.parse(storedUser),
         });
       }
-    } else if (!token) {
-      router.push('/');
-    }
+    } 
   }, []);
 
   if (isMobile) {
@@ -36,13 +34,13 @@ const Page = () => {
     );
   }
 
-  if (!user) {
-    return (
-      <div className="h-screen flex items-center px-10 justify-center text-xl">
-        <Spin size="large" />
-      </div>
-    );
-  }
+  // if (!user) {
+  //   return (
+  //     <div className="h-screen flex items-center px-10 justify-center text-xl">
+  //       <Spin size="large" />
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="h-screen flex flex-col px-10 text-xl overflow-hidden relative">

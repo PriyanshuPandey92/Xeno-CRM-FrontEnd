@@ -35,8 +35,9 @@ export default function Example({ children }: { children: React.ReactNode }) {
 const Sidebar = () => {
   const [open, setOpen] = useState(true);
   const [selected, setSelected] = useState("Dashboard");
-  const { logout } = useAuthStore();
+  const { isLoggedIn, logout } = useAuthStore();
   const router = useRouter();
+  
   return (
     <motion.nav
       layout
@@ -97,17 +98,20 @@ const Sidebar = () => {
           href="/dashboard/campaigns"
         />
 
-        <Option
-          Icon={FiLogOut}
-          title="Logout"
-          selected={selected}
-          setSelected={setSelected}
-          open={open}
-          onClick={() => {
-            logout();
-            router.push("/");
-          }}
-        />
+        {/* Conditionally render Logout option only if user is logged in */}
+        {isLoggedIn && (
+          <Option
+            Icon={FiLogOut}
+            title="Logout"
+            selected={selected}
+            setSelected={setSelected}
+            open={open}
+            onClick={() => {
+              logout();
+              router.push("/");
+            }}
+          />
+        )}
       </div>
 
       <ToggleClose open={open} setOpen={setOpen} />
@@ -137,7 +141,7 @@ const Option = ({
       {title === "Logout" ? (
         <motion.button
           layout
-          onClick={() => {}}
+          onClick={onClick}
           className={`relative flex h-10 w-full items-center rounded-md transition-colors ${
             selected === title
               ? "bg-indigo-100 text-indigo-800"
@@ -161,7 +165,6 @@ const Option = ({
               className={`text-xs font-medium ${
                 title === "Logout" ? "text-red-500" : ""
               }`}
-              onClick={onClick}
             >
               {title}
             </motion.span>

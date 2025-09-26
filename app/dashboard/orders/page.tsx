@@ -3,12 +3,15 @@ import React, { useEffect, useState } from "react";
 import { UploadOutlined, EditOutlined } from "@ant-design/icons";
 import type { UploadProps } from "antd";
 import { Button, message, Upload, Table, Spin, Modal, Form, Input } from "antd";
+import useAuthStore from "@/app/store/useAuthStore";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [authToken, setAuthToken] = useState<string | null>(null);
-
+  const { isLoggedIn } = useAuthStore();
+  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingOrder, setEditingOrder] = useState<any>(null);
   const [form] = Form.useForm();
@@ -74,7 +77,7 @@ const Page = () => {
   // Open modal
   const handleEdit = (order: any) => {
     setEditingOrder(order);
-    form.setFieldsValue(order);   
+    form.setFieldsValue(order);
     setIsModalOpen(true);
   };
 
@@ -100,16 +103,14 @@ const Page = () => {
 
       // Update local state
       setOrders((prev) =>
-        prev.map((o) =>
-          o._id === editingOrder._id ? { ...o, ...values } : o
-        )
+        prev.map((o) => (o._id === editingOrder._id ? { ...o, ...values } : o))
       );
 
-      alert("Order updated successfully!");  
+      alert("Order updated successfully!");
       setIsModalOpen(false);
     } catch (err) {
       console.error(err);
-      alert("Failed to update order.");  
+      alert("Failed to update order.");
     }
   };
 
@@ -162,14 +163,28 @@ const Page = () => {
       ),
     },
   ];
-
+  const handleUploadClick = () => {
+    if (!isLoggedIn) {
+      alert("You have to Login before using any feature");
+      router.push('/');
+      return;
+    }
+  };
   return (
     <div className="h-screen flex flex-col px-10 mt-10 text-xl">
       <h1 className="text-5xl font-bold">Orders</h1>
       <div className="mt-5">
-        <Upload {...props}>
-          <Button icon={<UploadOutlined />}>Upload</Button>
-        </Upload>
+        <div className="mt-5">
+          {isLoggedIn ? (
+            <Upload {...props}>
+              <Button icon={<UploadOutlined />}>Upload</Button>
+            </Upload>
+          ) : (
+            <Button icon={<UploadOutlined />} onClick={handleUploadClick}>
+              Upload
+            </Button>
+          )}
+        </div>
 
         {loading ? (
           <div className="flex justify-center items-center h-64">

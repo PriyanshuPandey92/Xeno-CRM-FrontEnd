@@ -4,12 +4,15 @@ import { UploadOutlined, EditOutlined } from "@ant-design/icons";
 import type { UploadProps } from "antd";
 import { notification } from "antd";
 import { Button, message, Upload, Table, Spin, Modal, Form, Input } from "antd";
+import useAuthStore from "@/app/store/useAuthStore";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
   const [customers, setCustomers] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [authToken, setAuthToken] = useState<string | null>(null);
-
+  const { isLoggedIn } = useAuthStore();
+  const router = useRouter();
   // Modal & form state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState<any>(null);
@@ -71,6 +74,13 @@ const Page = () => {
         message.error(`${info.file.name} upload failed.`);
       }
     },
+  };
+  const handleUploadClick = () => {
+    if (!isLoggedIn) {
+      alert("You have to Login before using any feature");
+      router.push('/');
+      return;
+    }
   };
 
   // Open modal
@@ -143,11 +153,19 @@ const Page = () => {
     <div className="h-screen flex flex-col px-10 mt-10 text-xl">
       <h1 className="text-5xl font-bold">Customers</h1>
 
-      {/* Upload */}
       <div className="mt-5">
-        <Upload {...props}>
-          <Button icon={<UploadOutlined />}>Upload</Button>
-        </Upload>
+        {isLoggedIn ? (
+          <Upload {...props}>
+            <Button icon={<UploadOutlined />}>Upload</Button>
+          </Upload>
+        ) : (
+          <Button 
+            icon={<UploadOutlined />}
+            onClick={handleUploadClick}
+          >
+            Upload
+          </Button>
+        )}
       </div>
 
       {/* Table */}

@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import useAuthStore from '../store/useAuthStore';
@@ -7,7 +7,7 @@ import { Button, Input } from 'antd';
 import { EditOutlined, LogoutOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 
 const ProfilePage = () => {
-  const { user, login, logout } = useAuthStore();
+  const { user, isLoggedIn, logout } = useAuthStore();
   const router = useRouter();
   const [formData, setFormData] = useState({
     email: user?.email || '',
@@ -19,6 +19,13 @@ const ProfilePage = () => {
     email: false,
     name: false,
   });
+  useEffect(()=>{
+    if (!isLoggedIn) {
+      alert("You have to Login first !!");
+      router.push('/');
+      return;
+    }
+  },[])
 
   const [loading, setLoading] = useState(false);
 

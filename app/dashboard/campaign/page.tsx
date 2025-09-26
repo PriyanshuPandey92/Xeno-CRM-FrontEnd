@@ -15,9 +15,12 @@ import {
 import { BsStars } from "react-icons/bs";
 import { PlusOutlined } from "@ant-design/icons";
 import { useForm } from "antd/es/form/Form";
+import useAuthStore from "@/app/store/useAuthStore";
+import { useRouter } from "next/navigation";
 
 const { Option } = Select;
 const { Title, Text } = Typography;
+
 
 const Page = () => {
   const [segmentRules, setSegmentRules] = useState<any[]>([]);
@@ -122,6 +125,11 @@ const Page = () => {
   const handleSubmit = async (values: any) => {
     console.log("Submitting form with values:", values);
     setLoading(true);
+    if (!isLoggedIn) {
+      alert("You have to Login before using any feature");
+      router.push('/');
+      return;
+    }
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/campaigns/create`,
@@ -149,6 +157,8 @@ const Page = () => {
     }
     setLoading(false);
   };
+  const { isLoggedIn } = useAuthStore();
+  const router = useRouter();
 
   return (
     <div className="h-screen flex justify-center items-start p-10 bg-gray-50">

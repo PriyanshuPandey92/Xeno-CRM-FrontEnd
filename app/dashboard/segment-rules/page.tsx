@@ -23,6 +23,8 @@ import {
   SettingOutlined,
   CheckCircleOutlined 
 } from "@ant-design/icons";
+import useAuthStore from "@/app/store/useAuthStore";
+import { useRouter } from "next/navigation";
 
 const { Option } = Select;
 const { Title, Text, Paragraph } = Typography;
@@ -30,6 +32,8 @@ const { Title, Text, Paragraph } = Typography;
 const Page = () => {
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
+  const { isLoggedIn } = useAuthStore();
+  const router = useRouter();
 
   // Predefined field options for better UX
   const fieldOptions = [
@@ -53,7 +57,11 @@ const Page = () => {
   const handleSubmit = async (values: any) => {
     console.log("Form Values:", values);
     setLoading(true);
-
+    if (!isLoggedIn) {
+      alert("You have to Login before using any feature");
+      router.push('/');
+      return;
+    }
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/segmentRules/create`,
