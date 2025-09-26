@@ -31,12 +31,6 @@ An intelligent CRM system. The platform empowers dynamic customer segmentation, 
 
 ---
 
-## 🎥 Demo Video
-
-📽️ [Demo Video Link](https://drive.google.com/file/d/1w-WiTPa2gKfR15nORWmXhPBbJHn8ggZ1/view)
-
----
-
 ## ✅ Key Features
 
 ### 📊 Data Ingestion
